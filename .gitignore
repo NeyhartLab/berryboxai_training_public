@@ -1,0 +1,9 @@
+.DS_store
+data/*
+*/yolov8*.pt
+berry_segmentation/data/*
+berry_segmentation/models/*
+berry_segmentation/output/*
+fruit_rot_detection/data/*
+fruit_rot_detection/models/*
+fruit_rot_detection/output/*
