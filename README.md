@@ -12,8 +12,8 @@ There are two deep learning inference tasks that are covered by the python packa
 ## Data
 
 Images and annotation data for each task is available from the USDA National Agriculture Library Ag Data Commons from the following links:
-+ Berry Segmentation: (LINK HERE)
-+ Fruit rot detection: (LINK HERE)
++ [Berry Segmentation](https://doi.org/10.15482/USDA.ADC/29853332)
++ [Fruit rot detection](https://doi.org/10.15482/USDA.ADC/31410369)
 
 ## Code
 
