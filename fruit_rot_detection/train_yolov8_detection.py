@@ -6,8 +6,6 @@
 
 ### User settings
 
-project_name = "berrybox_fruitrot_instanceseg" # DO NOT CHANGE THIS
-
 #### Data settings
 data_path = "" # Path to the dataset. MAKE SURE THIS DOES NOT END WITH /
 
@@ -83,7 +81,9 @@ gc.collect()
 
 
 """3. Shuffle the dataset"""
-# data_path = data_folder + "/" + ds_name
+
+# Shuffle the dataset using homemade code
+data_path = dataset_dir
 data_path_shuf = data_path + "_shuffled"
 
 if shuffle_data:
@@ -100,7 +100,7 @@ if shuffle_data:
         lines = f.readlines()
     newlines = []
     line0 = lines[0]
-    lines[0] = "path: " + proj_dir + "/" + data_path_shuf + "\n" + line0
+    lines[0] = "path: " + data_path_shuf + "\n" + line0
     lines[1:4] = [line.replace("../", "") for line in lines[1:4]]
     # Edit the path to train, valid, and test
     for line in lines:
@@ -131,9 +131,14 @@ if shuffle_data:
     n_train = n_images - (n_val + n_test)
 
     # Randomly sample basename for training/test/val
-    train_basenames = random.sample(all_basenames, n_train)
-    val_basenames = random.sample([x for x in all_basenames if x not in train_basenames], n_val)
-    test_basenames = [x for x in all_basenames if x not in train_basenames + val_basenames]
+    # 1. Make a copy to avoid altering the original list, then shuffle it
+    shuffled_basenames = list(all_basenames)
+    random.shuffle(shuffled_basenames)
+
+    # 2. Slice the list using the counts
+    train_basenames = shuffled_basenames[:n_train]
+    val_basenames = shuffled_basenames[n_train : n_train + n_val]
+    test_basenames = shuffled_basenames[n_train + n_val:]
 
     # Print the results
     print("Number of training images: " + str(n_train))
@@ -152,7 +157,7 @@ if shuffle_data:
         if dirname == "train":
             images = [x for x in os.listdir(all_image_path) if any([y in x for y in train_basenames])]
             labels = [x for x in os.listdir(all_labels_path) if any([y in x for y in train_basenames])]
-        elif dirname == "val":
+        elif dirname == "valid":
             images = [x for x in os.listdir(all_image_path) if any([y in x for y in val_basenames])]
             labels = [x for x in os.listdir(all_labels_path) if any([y in x for y in val_basenames])]
         else:
@@ -174,6 +179,8 @@ if shuffle_data:
 
 save_folder = data_path_shuf if shuffle_data else data_path
 yaml_dir = os.path.join(save_folder, "data.yaml")
+
+
 
 
 ## Set the name of the project for the model fitting
